@@ -1,0 +1,387 @@
+{
+  "active": false,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Mistral Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Upload": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral_PDF": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-28T05:05:35.812Z",
+  "id": "giquirDJ8padWpCD",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Fiancial Analyst with Mistral OCR",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "PDF Content Generation",
+        "formDescription": "Deep research on PDF",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "PDF File",
+              "fieldType": "file",
+              "acceptFileTypes": "*.pdf",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Research Depth",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Detailed"
+                  },
+                  {
+                    "option": "Summary"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Additional Instruction (Optional)",
+              "placeholder": "Provide additional instruction for refined result"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -440,
+        -120
+      ],
+      "id": "6fba1bc2-2dfe-4b0a-8e66-45025a8d6eb4",
+      "name": "On form submission",
+      "webhookId": "cc381ab6-f5ad-4d4d-8389-f04d13e2161c"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/files",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "purpose",
+              "value": "ocr"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "PDF_File"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -220,
+        -120
+      ],
+      "id": "b2b99f43-f7ff-4359-8914-abe101e0977a",
+      "name": "Mistral Upload",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "d158MAAKoeFGpNPS",
+          "name": "Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "expiry",
+              "value": "24"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        -120
+      ],
+      "id": "87adb110-a257-422f-adce-47b36e0a54d9",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "d158MAAKoeFGpNPS",
+          "name": "Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Please use the attached tool ( mistral_pdf_qa) as a source document to build the table of content and research",
+        "options": {
+          "systemMessage": "You are a Research Leader specialized in comprehensive topic analysis, research, and content structuring. Your task is to create an enriched, research-backed table of contents for a given topic.\n\nFollow these steps:\n\n0. Use the tool mistral_pdf_qa as the data source\n\n1. Thoroughly understand what the document is about\n\n2. Synthesize the gathered information to identify:\n   - Core concepts and principles\n   - Current trends and developments\n   - Expert opinions and best practices\n   - Real-world applications and examples\n   - Potential challenges and solutions\n\n3. Create a comprehensive table of contents that:\n   - Reflects both foundational knowledge and current developments\n   - Incorporates relevant case studies and examples\n   - Addresses common questions and concerns\n   - Includes practical applications and future implications\n\n4. Structure the content hierarchically, ensuring:\n   - Logical flow and progression\n   - Clear relationships between sections\n   - Balanced coverage of theoretical and practical aspects\n   - Integration of research-backed insights\n\nPlease format your response as follows:\n\n### **Topic Analysis**:\n[Brief overview of the topic and its significance based on current research]\n\n### **Key Research Insights**:\n- [Insight 1 from web research]\n- [Insight 2 from web research]\n- [Insight 3 from web research]\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        -120
+      ],
+      "id": "1c69e326-b2f1-4f82-9f06-86ac26bec3a4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        100
+      ],
+      "id": "963965fc-58c5-416a-b9b0-9fcc3ecfe299",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "KElZl6BWrcgPnb8u",
+          "name": "OpenAi 27march"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Mistral Upload').item.json.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        260,
+        100
+      ],
+      "id": "414b8687-9822-4a55-b70c-4c4ab8b2619e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "name": "mistral_pdf_qa",
+        "description": "This tool is designed for conducting research on PDFs uploaded to Mistral. It extracts insights, processes text, and enables structured querying for in-depth analysis. When using this tool, ensure all string values are correctly escaped, especially for multi-line strings.\n\nThis node calls the specified workflow to process the document and retrieves the response from its final node. The workflow must begin with an Execute Workflow Trigger to function correctly.",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $workflow.id }}",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        380,
+        100
+      ],
+      "id": "e5588058-f34f-4599-9b86-ea752a969a26",
+      "name": "Mistral_PDF"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "pdf_url"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -440,
+        300
+      ],
+      "id": "d6d4ba2a-7dde-43dd-bcca-3452828924e1",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"mistral-small-latest\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"text\",\n          \"text\": \"what is the last sentence in the document\"\n        },\n        {\n          \"type\": \"document_url\",\n          \"document_url\": \"https://arxiv.org/pdf/1805.04770\"\n        }\n      ]\n    }\n  ],\n  \"document_image_limit\": 8,\n  \"document_page_limit\": 64\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -220,
+        300
+      ],
+      "id": "086db0d7-5f28-43f7-9553-8585d58288a8",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "d158MAAKoeFGpNPS",
+          "name": "Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -20,
+        300
+      ],
+      "id": "e26f90d9-b1ad-4580-8932-daf427d087f4",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {
+    "Mistral Upload": [
+      {
+        "json": {
+          "id": "761f5d13-6809-4f5e-bfb1-2975b2d9de74",
+          "object": "file",
+          "bytes": 203316,
+          "created_at": 1743127936,
+          "filename": "KumarGyanamIIMI-EPDM-23-06SA-signed.pdf",
+          "purpose": "ocr",
+          "sample_type": "ocr_input",
+          "num_lines": null,
+          "source": "upload"
+        }
+      }
+    ],
+    "HTTP Request": [
+      {
+        "json": {
+          "url": "https://mistralaifilesapiprodswe.blob.core.windows.net/fine-tune/5d4b8ac0-7900-49df-9306-8c32f6cf8a1c/761f5d1368094f5ebfb12975b2d9de74.pdf?se=2025-03-29T16%3A00%3A27Z&sp=r&sv=2025-01-05&sr=b&sig=dMVKFTn7qkNP/XfMKBs2TcJeNGlQo4EB2v834b9hOJo%3D"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-03-28T16:11:08.256Z",
+  "versionId": "b62671ba-8cd1-4174-8481-54b0bef26369"
+}
