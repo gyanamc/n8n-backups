@@ -1,0 +1,249 @@
+{
+  "active": false,
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "researchAgent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTubeAgent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-20T00:42:57.975Z",
+  "id": "8IznX8MIergzkaV0",
+  "meta": null,
+  "name": "Personal Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "00a2f1f3-6e95-4843-b4c2-73452f4e49df",
+      "name": "Telegram Trigger",
+      "webhookId": "9d4539a2-08e5-4344-a89c-55fb397bce00"
+    },
+    {
+      "parameters": {
+        "chatId": "1636597254",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        0
+      ],
+      "id": "4c57e0b2-72d1-48d8-adc5-a5320c24f2bc",
+      "name": "Telegram",
+      "webhookId": "040b370e-b315-463d-b362-98584a1b3b41"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -60,
+        260
+      ],
+      "id": "eea5d3b4-434a-4a2f-ace6-b3b7f14dc19c",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=#role\nyou are a helpful assistant called Gyanam.\nyou are talking to  {{ $json.message.from.first_name }}\n\n#additional information\nCurrent date and time: {{ $now }}\n\n#tools\nyou have access of following tools:\n\n## Calculator \nuse this tool for any calculation.\n\n## researchAgent\nuse this tool to perform research in any given topic. pass the query to this tool in order to perform best possible research\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "74e1c7ef-dc22-4f5f-8511-a4b7506ec422",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1636597254",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        260
+      ],
+      "id": "2528d0d9-0d4f-4f56-8ead-bff13ff2c8ec",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        200,
+        260
+      ],
+      "id": "d6348366-2b01-4033-a53d-95a29652b392",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "name": "researchAgent",
+        "description": "This tool is used to research online content on any topic and provide results.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "6e2ZtBYGsqMuNone",
+          "cachedResultName": "researchAgent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        360,
+        280
+      ],
+      "id": "6b7276ca-70e6-491d-b955-ed222b13d3ad",
+      "name": "researchAgent"
+    },
+    {
+      "parameters": {
+        "name": "YouTubeAgent",
+        "description": "Call this tool when asked to come up with YouTube video ideas based on the researched input. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "GlejeVc1BPNBS3Hg",
+          "mode": "list",
+          "cachedResultName": "YouTube Research"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        480,
+        280
+      ],
+      "id": "4a5770ed-efd1-4dfb-a625-20e9a57b1198",
+      "name": "YouTubeAgent"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-03-20T00:42:57.975Z",
+  "versionId": "00178578-8b1c-49cd-87b0-92391b6b13e3"
+}
