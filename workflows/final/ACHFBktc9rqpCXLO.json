@@ -481,7 +481,7 @@
             },
             {
               "name": "Authorization",
-              "value": "Bearer key_abbef5babf3afdb082d5f799b4b2276e2e010afab7b7f83343036a38c51e9214e8adfe3975c67c032b9d92033670586b091d48bbdadd4ed1e4cdcc8e1fa307d3"
+              "value": "Bearer"
             }
           ]
         },
@@ -575,6 +575,6 @@
     }
   ],
   "triggerCount": 0,
-  "updatedAt": "2025-05-05T09:15:57.156Z",
-  "versionId": "4a38c30e-97ca-46cd-984e-c4a36c4f3142"
+  "updatedAt": "2025-05-05T09:23:12.151Z",
+  "versionId": "649209cf-df02-412d-b4f1-a22d90d575b9"
 }
