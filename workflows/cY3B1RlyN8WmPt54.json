@@ -1,0 +1,675 @@
+{
+  "active": false,
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-16T12:02:01.085Z",
+  "id": "cY3B1RlyN8WmPt54",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Product recommendation",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ]
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        -60
+      ],
+      "id": "f1601dad-c74a-4015-b780-72cfedc7071c",
+      "name": "WhatsApp Trigger",
+      "webhookId": "36ce9b13-2ed7-42ec-93d0-b437d802cdb3",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "dr7MTnDxbvZQfu6r",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "605851279274582",
+        "recipientPhoneNumber": "+919953682525",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {
+          "previewUrl": false
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        240,
+        480
+      ],
+      "id": "5d5383cf-27ae-4d15-9604-51cf0853bbfa",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "eaf9d164-4055-48f4-80ec-7cc5fd8e8e51",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "Rfz6pLwAlGhWxNU7",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        60,
+        20
+      ],
+      "id": "d70e30a4-4f93-47f9-9dc3-75b94c2c6a90",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        360,
+        240
+      ],
+      "id": "23eca89f-13e5-4fc1-b79c-45fbe151dbfb",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "jW2oEwP6UKhVM3b1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        520,
+        240
+      ],
+      "id": "31a6ab0f-d0a5-4ecd-857b-eaf660f8dd7e",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I",
+          "mode": "list",
+          "cachedResultName": "Youtube_Setup_Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        240,
+        240
+      ],
+      "id": "42e609dc-3ddf-4d87-ad4f-6d98f35948e5",
+      "name": "Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0c5f75b1-2f01-4807-ab32-a6d317ed149c",
+                    "leftValue": "={{ $json.messages[0].text.body }}",
+                    "rightValue": "Train:",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notStartsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.messages[0].text.body }}",
+                    "rightValue": "Train:",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -220,
+        -60
+      ],
+      "id": "998cfb96-fecf-4e54-90ab-596e433a308e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = $input.first().json.messages[0].text.body;\nconst urlMatch = message.match(/(?:https?:\\/\\/)?([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}(?:\\/\\S*)?)/);\nif (urlMatch) {\n    let url = urlMatch[0];\n    if (!url.startsWith(\"http\")) {\n        url = \"https://\" + url; // Add https:// if missing\n    }\n    return [{ product_url: url }];\n} else {\n    return [{ product_url: \"Invalid URL\" }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        200
+      ],
+      "id": "b2220871-6fda-4e88-99df-4e10ee8a6abd",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.product_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -380,
+        200
+      ],
+      "id": "aee5a986-3e83-419a-b15d-928338c81fbe",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Retrieve the HTML content from the previous node\nconst htmlContent = $input.first().json.data; // Ensure 'data' contains the HTML response\n\n// Check if htmlContent exists and is a string\nif (typeof htmlContent !== 'string') {\n    throw new Error('Expected HTML content, but received non-string data.');\n}\n\n// Clean up the content:\n\n// Remove all <a> tags (links) and their content\nlet cleanedText = htmlContent.replace(/<a[^>]*>.*?<\\/a>/g, '');\n\n// Remove all script, style, and other non-text elements\ncleanedText = cleanedText.replace(/<script[^>]*>.*?<\\/script>/gs, '');\ncleanedText = cleanedText.replace(/<style[^>]*>.*?<\\/style>/gs, '');\n\n// Add line breaks for common HTML block elements (headings, paragraphs, etc.):\ncleanedText = cleanedText.replace(/<h[1-6][^>]*>/g, '\\n'); // For headings (h1, h2, etc.)\ncleanedText = cleanedText.replace(/<\\/h[1-6]>/g, '\\n'); // Closing heading tags\ncleanedText = cleanedText.replace(/<p[^>]*>/g, '\\n'); // For paragraphs <p>\ncleanedText = cleanedText.replace(/<\\/p>/g, '\\n'); // Closing paragraph tags\ncleanedText = cleanedText.replace(/<ul[^>]*>/g, '\\n'); // For unordered lists <ul>\ncleanedText = cleanedText.replace(/<\\/ul>/g, '\\n'); // Closing unordered list tags\ncleanedText = cleanedText.replace(/<ol[^>]*>/g, '\\n'); // For ordered lists <ol>\ncleanedText = cleanedText.replace(/<\\/ol>/g, '\\n'); // Closing ordered list tags\ncleanedText = cleanedText.replace(/<li[^>]*>/g, '\\n'); // List items <li>\ncleanedText = cleanedText.replace(/<\\/li>/g, '\\n'); // Closing list item tags\n\n// Remove all remaining HTML tags\ncleanedText = cleanedText.replace(/<[^>]+>/g, '');\n\n// Remove special characters (you can customize this regex for more specific character removal)\ncleanedText = cleanedText.replace(/[^\\w\\s]/g, ' '); // Remove special characters except for word characters and spaces\n\n// Normalize whitespace (convert multiple spaces into a single space)\ncleanedText = cleanedText.replace(/\\s+/g, ' ').trim();\n\n// Output the cleaned and formatted text with line breaks\nreturn [\n    {\n        json: {\n            cleanedText: cleanedText // This will show plain text with line breaks\n        }\n    }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        200
+      ],
+      "id": "285f851d-09ca-4c27-b6ac-77790c87b8ac",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I",
+          "mode": "list",
+          "cachedResultName": "Youtube_Setup_Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Link": "={{ $('Code').item.json.product_url }}",
+            "Product Discription": "={{ $json.cleanedText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Product Link",
+              "displayName": "Product Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Product Price",
+              "displayName": "Product Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Product Discription",
+              "displayName": "Product Discription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Topic",
+              "displayName": "Product Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -560,
+        440
+      ],
+      "id": "21fc05ba-e19a-4d72-acac-75068bcb2c77",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Prompt User Message:\n\nThis is the url of the product: {{ $json['Product Link'] }}\n\nProduct Description:\n{{ $json['Product Discription'] }}\n",
+        "options": {
+          "systemMessage": "=Systems Instructions - AI Agent - Product Training:\n\nYou are a helpful assistant.\n\nYou have received the text of a product page. Your job is to extract the product name and the product price.\n\nYou have access to the Google Sheets tool that allows you to update columns and cells inside a Google Sheet.\n\nYour task is to always add the price and product name and product topic inside the Google Sheet to the exact same row with the URL of the product you received.\n\nWhen you add the product price, make sure to clearly identify from the product description if it's a subscription or one-time payment.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -240,
+        460
+      ],
+      "id": "0afadcd5-e030-4415-b62d-56b69c98142b",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        660
+      ],
+      "id": "a97a525a-32c4-40b0-92ed-b2fa17a8da31",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "jW2oEwP6UKhVM3b1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        660
+      ],
+      "id": "b342176f-0bf4-4a8c-8a2e-9074d14f8dcb",
+      "name": "Window Buffer Memory1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I",
+          "mode": "list",
+          "cachedResultName": "Youtube_Setup_Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Link": "={{ $fromAI(\"Product_Link\",\"this is the website link of the product\") }}",
+            "Product Name": "={{ $fromAI(\"Product_Name\",\"this is the name of the product\") }}",
+            "Product Price": "={{ $fromAI(\"Product_Price\",\"this is the price of the product\") }}",
+            "Product Discription": "=",
+            "Product Topic": "={{ $fromAI(\"product_topic\",\"this is the topic of the product that specifies what it is for, who it is for and what the key benefits are\") }}"
+          },
+          "matchingColumns": [
+            "Product Link"
+          ],
+          "schema": [
+            {
+              "id": "Product Link",
+              "displayName": "Product Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Price",
+              "displayName": "Product Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Discription",
+              "displayName": "Product Discription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Topic",
+              "displayName": "Product Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        20,
+        680
+      ],
+      "id": "bb138a19-7b6e-4a06-8e96-c06bc17800bd",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-03-17T01:09:41.378Z",
+  "versionId": "31eac211-b56c-4dbf-aaa2-c6ee3ec9d65d"
+}
