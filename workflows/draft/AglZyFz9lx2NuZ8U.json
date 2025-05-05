@@ -1,0 +1,439 @@
+{
+  "active": true,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - User input to prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text to Image": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Get the Image ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get the Video URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Image ID": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Video URL": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - User input to prompt": {
+      "main": [
+        [
+          {
+            "node": "Text to Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-04-18T01:08:09.140Z",
+  "id": "AglZyFz9lx2NuZ8U",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Third Person PoV - Indian God - AI Videos",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "POV Video",
+        "formDescription": "Generate POV Video",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "User Input",
+              "placeholder": "Write...what's in your mind!!",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6a6f0f6a-a661-431e-9042-481465079e14",
+      "name": "On form submission",
+      "webhookId": "323311c6-79d4-4222-9baf-fc36b8049a7d"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "inputs",
+              "value": "={{ $json.message.content.prompt }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        0
+      ],
+      "id": "aa59532f-4fb7-450b-a3b8-ccc728062fe8",
+      "name": "Text to Image",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "HllYXvCokknMJETW",
+          "name": "Hugging Face SBI Card"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        820,
+        0
+      ],
+      "id": "fbcb7ac2-5a5b-4766-81d1-c2f0252868f5",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "content": "Generate Prompt",
+        "height": 320,
+        "width": 840
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -80
+      ],
+      "id": "0d88d2df-dde3-436d-84c1-890d9d79c87f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "amount": 40
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        0
+      ],
+      "id": "11cda50a-f735-4c9f-87bc-8dc1b4eb40d5",
+      "name": "Wait",
+      "webhookId": "d0adb0e4-ff25-4010-bc3b-f9c3e3f9e349"
+    },
+    {
+      "parameters": {
+        "content": "Generate Image",
+        "height": 320,
+        "width": 460,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -80
+      ],
+      "id": "043161f8-8355-4ef8-8398-107e52be3ced",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Generate Video",
+        "height": 320,
+        "width": 840,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -80
+      ],
+      "id": "09b07f00-9172-4a62-864a-8a9f54f03cf3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13mBEsjrOBwppkeYqSoBaOHUoWZaDE7P6wspBDPyrTMk",
+          "mode": "list",
+          "cachedResultName": "AI Video list",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13mBEsjrOBwppkeYqSoBaOHUoWZaDE7P6wspBDPyrTMk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13mBEsjrOBwppkeYqSoBaOHUoWZaDE7P6wspBDPyrTMk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "AI Video Title": "={{ $('On form submission').item.json['User Input'] }}",
+            "AI Video Link": "={{ $json.output[0] }}"
+          },
+          "matchingColumns": [
+            "AI Video Title"
+          ],
+          "schema": [
+            {
+              "id": "AI Video Title",
+              "displayName": "AI Video Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Video Link",
+              "displayName": "AI Video Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1660,
+        0
+      ],
+      "id": "6eaf8583-5e06-4a0b-a7e1-bce86558f3d0",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.dev.runwayml.com/v1/image_to_video",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer key_e428b44e1afae4eee2958f4ef337ae60fe9d0d3d94a099b7534197a32ea6ecb83ce001575b14c2c09f39acce134f462c21974f8ecf795393a8670a2732e3dd80"
+            },
+            {
+              "name": "X-Runway-Version",
+              "value": "2024-11-06"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "promptImage",
+              "value": "={{ 'data:image/png;base64,' + $json.data }}"
+            },
+            {
+              "name": "seed",
+              "value": "4294967295"
+            },
+            {
+              "name": "model",
+              "value": "gen3a_turbo"
+            },
+            {
+              "name": "promptText",
+              "value": "string"
+            },
+            {
+              "name": "watermark",
+              "value": "false"
+            },
+            {
+              "name": "duration",
+              "value": "5"
+            },
+            {
+              "name": "ratio",
+              "value": "1280:768"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1060,
+        0
+      ],
+      "id": "57635aff-fed1-47b7-802f-71b512358780",
+      "name": "Get the Image ID"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.dev.runwayml.com/v1/tasks/{{ $json.id }}\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer key_abbef5babf3afdb082d5f799b4b2276e2e010afab7b7f83343036a38c51e9214e8adfe3975c67c032b9d92033670586b091d48bbdadd4ed1e4cdcc8e1fa307d3"
+            },
+            {
+              "name": "X-Runway-Version",
+              "value": "2024-11-06"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        0
+      ],
+      "id": "498562a7-b13e-4416-b511-e35404a2bd52",
+      "name": "Get the Video URL"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-4-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a cinematic prompt generator.\n\nYou will receive a direct user input describing a mythological or cultural Indian scene. Your task is to expand ONLY that exact input into a vivid cinematic paragraph.\n\n🎥 Format the response like a film scene, using third-person narration and cinematic techniques like wide shot, ambient sound, close-up, lighting, emotion, mood, and movement.\n\n🛑 Do NOT change or reinterpret the scene. Stick exactly to what the user wrote. Do not invent new characters, locations, or timelines.\n\n✅ Output ONLY in this JSON format:\n{\n  \"prompt\": \"...\"\n}\n\n- One paragraph only\n- Maximum 950 characters\n- No extra text or line breaks\n"
+            },
+            {
+              "content": "={{ $('On form submission').item.json['User Input'] }}\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        0
+      ],
+      "id": "7b207bef-bb26-4f03-a321-4040cd66846c",
+      "name": "OpenAI - User input to prompt",
+      "credentials": {
+        "openAiApi": {
+          "id": "KElZl6BWrcgPnb8u",
+          "name": "OpenAi 27march"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-04-17T00:33:01.920Z",
+      "updatedAt": "2025-04-17T00:33:01.920Z",
+      "id": "UKdEE5nMSLL2uECq",
+      "name": "draft"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-04-26T06:54:00.684Z",
+  "versionId": "f921a5b9-9bf4-486d-b366-69b7032ffec3"
+}
