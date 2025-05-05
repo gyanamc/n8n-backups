@@ -1,0 +1,276 @@
+{
+  "active": false,
+  "connections": {
+    "Workflow Input Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Script Outline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Script Outline",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script Outline": {
+      "main": [
+        [
+          {
+            "node": "Title Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Title Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Title Generator": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-20T00:44:25.132Z",
+  "id": "yNIdE7EqqU06wmDO",
+  "meta": null,
+  "name": "YouTube script maker",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8f53e036-496a-42b2-9f65-7b281669a413",
+      "name": "Workflow Input Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "#Role\nyour role is to provide in-depth research based on the provided input. This information should be sufficient to create a YouTube video on it, whether it is a tutorial, news, or reaction video.\n\nwrite a compete on the research that you have performed."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "cc7b4c02-4b7c-486c-ae5c-15b06c05f6ef",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        220
+      ],
+      "id": "e1c31d18-39d1-4ef6-8e18-16186852248a",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        380,
+        220
+      ],
+      "id": "b23adde5-a685-45fa-90e3-f24bb7a32f76",
+      "name": "SerpAPI"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "your role is to a YouTube video script outline based on the provided query. The video can be news or a tutorial based on the research provided.\n\nRespond on the following structure:\n\n#Hook\na catchy one-sentence hook for the video in the form of a question or bold statement.\n\n#Introduction\nthe introduction of the video should be 2-3 sentences long.\n\n#Body\na bullet point list (sort sentences) of the talking point."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        580,
+        0
+      ],
+      "id": "9d22031f-ad26-4cfe-bd24-3ab4747fc447",
+      "name": "Script Outline"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        220
+      ],
+      "id": "e3407e7b-b7ef-41d0-ba8c-8db8bc56cc2a",
+      "name": "OpenAI Chat Model1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Your role is to develop high click-through rate title ideas based on the video's description."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        940,
+        0
+      ],
+      "id": "b1fa2702-d1dd-4a6b-89eb-6cf47b4118e2",
+      "name": "Title Generator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        220
+      ],
+      "id": "59e725ab-da1e-4e3f-864c-3979fcd94c19",
+      "name": "OpenAI Chat Model2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5f9536e-b921-4a8d-81ba-79a23baa4b84",
+              "name": "Response",
+              "value": "=Possible Titles:\n{{ $json.text }}\n\nScript Outline:\n{{ $('Script Outline').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1300,
+        0
+      ],
+      "id": "8bf94850-1b8f-4e4c-a84d-1069c45e374e",
+      "name": "Format Response"
+    }
+  ],
+  "pinData": {
+    "Workflow Input Trigger": [
+      {
+        "json": {
+          "query": "Create a video on Llama 3.3"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-03-20T00:44:25.132Z",
+  "versionId": "0e250960-2940-4bad-8240-c464f07a2145"
+}
