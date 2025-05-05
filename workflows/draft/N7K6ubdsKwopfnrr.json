@@ -1,0 +1,436 @@
+{
+  "active": false,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - User input to prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text to Image": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Get the Image ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get the Video URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Image ID": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Video URL": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - User input to prompt": {
+      "main": [
+        [
+          {
+            "node": "Text to Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-04-17T00:31:57.835Z",
+  "id": "N7K6ubdsKwopfnrr",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Third Person PoV - Movie Star Walk - AI Videos",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "POV Video",
+        "formDescription": "Generate POV Video",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "User Input",
+              "placeholder": "Write...what's in your mind!!",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "19c77967-45ea-42f4-b49a-d3fabf40c903",
+      "name": "On form submission",
+      "webhookId": "742314c6-a5ab-49bf-8ba1-a3a3e7626717"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "inputs",
+              "value": "={{ $json.message.content.prompt }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        0
+      ],
+      "id": "1fa2e1b5-ee98-408a-a499-6fdce2ea512f",
+      "name": "Text to Image",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "HllYXvCokknMJETW",
+          "name": "Hugging Face SBI Card"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        820,
+        0
+      ],
+      "id": "a5d6fc1b-c20e-4683-b4ae-ae7ca747542b",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "content": "Generate Prompt",
+        "height": 320,
+        "width": 840
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -80
+      ],
+      "id": "21f19958-aaeb-4c69-b864-0087a0221c93",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "amount": 40
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        0
+      ],
+      "id": "1dffb35e-bd66-4440-8206-be317ae55726",
+      "name": "Wait",
+      "webhookId": "ddac4c49-ca0e-43ac-a996-dbb1778b1885"
+    },
+    {
+      "parameters": {
+        "content": "Generate Image",
+        "height": 320,
+        "width": 460,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -80
+      ],
+      "id": "3f7c0ce3-6166-45e2-ac50-e385fe857df9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Generate Video",
+        "height": 320,
+        "width": 840,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -80
+      ],
+      "id": "4bb1a5e0-dccf-4f31-b1ca-086cbf1ecd54",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13mBEsjrOBwppkeYqSoBaOHUoWZaDE7P6wspBDPyrTMk",
+          "mode": "list",
+          "cachedResultName": "AI Video list",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13mBEsjrOBwppkeYqSoBaOHUoWZaDE7P6wspBDPyrTMk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13mBEsjrOBwppkeYqSoBaOHUoWZaDE7P6wspBDPyrTMk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "AI Video Title": "={{ $('On form submission').item.json['User Input'] }}",
+            "AI Video Link": "={{ $json.output[0] }}"
+          },
+          "matchingColumns": [
+            "AI Video Title"
+          ],
+          "schema": [
+            {
+              "id": "AI Video Title",
+              "displayName": "AI Video Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Video Link",
+              "displayName": "AI Video Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1660,
+        0
+      ],
+      "id": "da570ee9-64ac-4314-8eb9-98a00a6f1dcf",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.dev.runwayml.com/v1/image_to_video",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer key_e428b44e1afae4eee2958f4ef337ae60fe9d0d3d94a099b7534197a32ea6ecb83ce001575b14c2c09f39acce134f462c21974f8ecf795393a8670a2732e3dd80"
+            },
+            {
+              "name": "X-Runway-Version",
+              "value": "2024-11-06"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "promptImage",
+              "value": "={{ 'data:image/png;base64,' + $json.data }}"
+            },
+            {
+              "name": "seed",
+              "value": "4294967295"
+            },
+            {
+              "name": "model",
+              "value": "gen3a_turbo"
+            },
+            {
+              "name": "promptText",
+              "value": "string"
+            },
+            {
+              "name": "watermark",
+              "value": "false"
+            },
+            {
+              "name": "duration",
+              "value": "5"
+            },
+            {
+              "name": "ratio",
+              "value": "1280:768"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1060,
+        0
+      ],
+      "id": "82d1e174-7d76-4b76-b00c-df918348e0a1",
+      "name": "Get the Image ID"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.dev.runwayml.com/v1/tasks/{{ $json.id }}\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer key_abbef5babf3afdb082d5f799b4b2276e2e010afab7b7f83343036a38c51e9214e8adfe3975c67c032b9d92033670586b091d48bbdadd4ed1e4cdcc8e1fa307d3"
+            },
+            {
+              "name": "X-Runway-Version",
+              "value": "2024-11-06"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        0
+      ],
+      "id": "2dfe23f9-7bd8-4465-b977-ce0f5fd36c2c",
+      "name": "Get the Video URL"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=📌 Third-Person Cinematic Prompt Generator (Single Input → Unified Output)\n\n✅ Task:\nYou are a highly advanced AI trained to transform a short user-provided description (typically referencing an iconic scene from Indian cinema) into a vivid, cinematic prompt suitable for image and video generation.\n\n________________________________________\n📌 OUTPUT REQUIREMENTS\n\n• Output must be a **single paragraph** in **third-person cinematic style**.\n• Must use **descriptive visual storytelling** that feels like a film director’s shot breakdown.\n• Keep output **under 950 characters**.\n• Output MUST be formatted as a single JSON object:\n  {\n    \"prompt\": \"Generated cinematic scene description goes here...\"\n  }\n\n________________________________________\n✅ STYLE RULES & SCENE COMPOSITION\n\n🔷 Third-Person POV ONLY\n• The viewer watches the subject, like in a movie — no \"I\" or \"my\".\n• Subject = actor or character being described.\n\n🔷 Cinematic Language\n• Use expressive film terms (e.g., \"sweeping shot\", \"slow motion\", \"pan\", \"close-up\").\n• Add movement, visual depth, composition.\n\n🔷 Camera + Emotion + Environment\n• Describe the subject’s action, posture, emotion, and surroundings.\n• Add lighting (golden hour, rain glisten, harsh shadows).\n• Mention background (era, crowd, textures, scenery).\n• Optionally include **ambient audio** (wind, train horn, temple bell, footsteps, etc).\n\n🔷 Time Period or Style\n• If implied (like “movie Deewar”), use era-appropriate visuals: 70s film grain, vintage clothing, etc.\n\n________________________________________\n📌 FORMAT TEMPLATE:\n\nA [camera type] cinematic shot of [actor/character] [performing action], in [setting/environment], wearing [visual clothing]. [Add visual effects, textures, or lighting]. [Finish with motion/audio/emotion detail].\n\n________________________________________\n📌 Example User Inputs + Outputs\n\nInput:\namitabh bachchan walk in the movie deewar\n\nOutput:\n{\n  \"prompt\": \"A dramatic third-person cinematic shot of Amitabh Bachchan walking with intensity down a dimly lit alley, clad in a dark shirt with the 1970s Bombay backdrop. Dust swirls in the air, shadows stretch across the walls, and his face is stern, eyes filled with resolve. The camera captures his powerful stride in slow motion, as the ambient sound of distant temple bells and street noise lingers in the background.\"\n}\n\nInput:\nkajol running in the rain from dilwale dulhania le jayenge\n\nOutput:\n{\n  \"prompt\": \"A sweeping third-person cinematic shot of Kajol running through a lush green field under pouring rain, wearing a flowing orange salwar kameez. Her arms are outstretched, soaked fabric clinging to her as droplets sparkle in the monsoon light. The camera pans as her laughter blends with the sound of thunder and distant train horns, evoking nostalgia and romantic longing.\"\n}\n\n________________________________________\n📌 USER INPUT FIELD:\nHere is the short user-provided description: {{ $json['User Input'] }}\n\nFINAL REMINDER:\n• Output MUST follow all structure, style, and format rules above\n• Output MUST be one JSON object\n• Output MUST be under 950 characters\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        0
+      ],
+      "id": "2333ccf6-0384-4234-933f-88cb61e2ad5a",
+      "name": "OpenAI - User input to prompt",
+      "credentials": {
+        "openAiApi": {
+          "id": "KElZl6BWrcgPnb8u",
+          "name": "OpenAi 27march"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-04-17T00:33:01.920Z",
+      "updatedAt": "2025-04-17T00:33:01.920Z",
+      "id": "UKdEE5nMSLL2uECq",
+      "name": "draft"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-04-18T09:05:36.305Z",
+  "versionId": "bb5039a0-48da-4e68-baa0-9954d3b5f2b3"
+}
