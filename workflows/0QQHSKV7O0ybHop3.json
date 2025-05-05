@@ -1,0 +1,802 @@
+{
+  "active": false,
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Calling Qdrant Recommendation API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Selecting Fields Relevant for Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting Embedding": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting Embedding1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Embedding Recommendation Request with Open AI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Embedding Anti-Recommendation Request with Open AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calling Qdrant Recommendation API": {
+      "main": [
+        [
+          {
+            "node": "Retrieving Recommended Movies Meta Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Selecting Fields Relevant for Agent": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieving Recommended Movies Meta Data": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embedding Recommendation Request with Open AI": {
+      "main": [
+        [
+          {
+            "node": "Extracting Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embedding Anti-Recommendation Request with Open AI": {
+      "main": [
+        [
+          {
+            "node": "Extracting Embedding1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-04-09T06:30:40.326Z",
+  "id": "0QQHSKV7O0ybHop3",
+  "meta": {
+    "templateId": "1960",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "AMA-using vector DB and Agent-SBI Card -RE only copy",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "bf311b22-21b4-445c-8c4d-12f77016888f",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        300,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "mrscoopers"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "list",
+          "value": "n8n_demo",
+          "cachedResultUrl": "https://github.com/mrscoopers/n8n_demo",
+          "cachedResultName": "n8n_demo"
+        },
+        "filePath": "Top_1000_IMDB_movies.csv",
+        "additionalParameters": {}
+      },
+      "id": "4c830d85-1b4e-4cef-8175-72d043e8e4be",
+      "name": "GitHub",
+      "type": "n8n-nodes-base.github",
+      "position": [
+        520,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3c086b94-4d8f-49e8-9587-feb20a4c6483",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        680,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "e263c922-a1c3-4cad-8974-ac91fd9b6910",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        880,
+        220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $('Extract from File').item.json.Description }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "movie_name",
+                "value": "={{ $('Extract from File').item.json['Movie Name'] }}"
+              },
+              {
+                "name": "movie_release_date",
+                "value": "={{ $('Extract from File').item.json['Year of Release'] }}"
+              },
+              {
+                "name": "movie_description",
+                "value": "={{ $('Extract from File').item.json.Description }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "68300c8b-07a1-4f4c-9d61-23d7dd158626",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        1020,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "58c8300d-f7ab-466c-9bc0-b70a843265b1",
+      "name": "Token Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "position": [
+        1020,
+        420
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "mode": "id",
+          "value": "imdb"
+        },
+        "options": {}
+      },
+      "id": "4596c0c4-e737-4886-b999-45324d4ff796",
+      "name": "Qdrant Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "position": [
+        920,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "89a62717-0b7e-4231-9f1e-cd07290e5d89",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        240,
+        420
+      ],
+      "webhookId": "71bfe0f8-227e-466b-9d07-69fd9fe4a27b",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9cc2fd98-712b-4791-a5c8-975371df645e",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        360,
+        620
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "movie_recommender",
+        "description": "Call this tool to get a list of recommended movies from a vector database. ",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "a58HZKwcOy7lmz56"
+        },
+        "specifyInputSchema": true,
+        "schemaType": "manual",
+        "inputSchema": "{\n\"type\": \"object\",\n\"properties\": {\n\t\"positive_example\": {\n      \"type\": \"string\",\n      \"description\": \"A string with a movie description matching the user's positive recommendation request\"\n    },\n    \"negative_example\": {\n      \"type\": \"string\",\n      \"description\": \"A string with a movie description matching the user's negative anti-recommendation reuqest\"\n    }\n}\n}"
+      },
+      "id": "df4d9d1d-1f99-48f7-824f-7b37a769f985",
+      "name": "Call n8n Workflow Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        640,
+        620
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {},
+      "id": "2a3cfecd-6289-4158-8408-c8c9463ef2f1",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        480,
+        620
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {},
+      "id": "c3058aa5-61ea-4767-8ded-d4b47738a91d",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        960,
+        880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "id": "d8e82328-b518-4766-af36-609cdd9d8c02",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1860,
+        780
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "result",
+        "options": {}
+      },
+      "id": "db556fe0-769e-461f-99f9-b4dcacd0bf36",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        2580,
+        760
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "result.points",
+        "options": {}
+      },
+      "id": "deca3bff-74be-473a-a6c8-c8a8f610964c",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        2460,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "id",
+        "options": {}
+      },
+      "id": "57404408-554d-4f2d-ae7d-ef009b4e9868",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        2840,
+        680
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "response",
+        "options": {}
+      },
+      "id": "451dfa2c-f79f-4d99-8fe4-3628d62cb08b",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        3280,
+        680
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Movie Recommender Tool using a Vector Database under the hood. Provide top-3 movie recommendations returned by the database, ordered by their recommendation score, but not showing the score to the user."
+        }
+      },
+      "id": "5b920315-886e-4680-822c-7b4192131052",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        460,
+        420
+      ],
+      "typeVersion": 1.6
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer $OPENAI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input",
+              "value": "={{ $json.query.positive_example }}"
+            },
+            {
+              "name": "model",
+              "value": "text-embedding-3-small"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8b8401cc-8945-40bd-9822-f2b90c6f0787",
+      "name": "Embedding Recommendation Request with Open AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1220,
+        740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer $OPENAI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input",
+              "value": "={{ $json.query.negative_example }}"
+            },
+            {
+              "name": "model",
+              "value": "text-embedding-3-small"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2c9ea125-51fa-459b-b521-3099e85beecc",
+      "name": "Embedding Anti-Recommendation Request with Open AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1240,
+        940
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01a28c9d-aeb1-48bb-8a73-f8bddbd73460",
+              "name": "positive_example",
+              "type": "array",
+              "value": "={{ $json.data[0].embedding }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3eaeb411-d1e9-4966-97a6-ae4b12ec8016",
+      "name": "Extracting Embedding",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1500,
+        740
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01a28c9d-aeb1-48bb-8a73-f8bddbd73460",
+              "name": "negative_example",
+              "type": "array",
+              "value": "={{ $json.data[0].embedding }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ac87de17-e5c1-4817-ab93-31f262e20dff",
+      "name": "Extracting Embedding1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1500,
+        940
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://edcc6735-2ffb-484f-b735-3467043828fe.europe-west3-0.gcp.cloud.qdrant.io:6333/collections/imdb_1000_open_ai/points/query",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "qdrantApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": {\n    \"recommend\": {\n      \"positive\": [[{{ $json.positive_example }}]],\n      \"negative\": [[{{ $json.negative_example }}]],\n      \"strategy\": \"average_vector\"\n    }\n  },\n  \"limit\":3\n}",
+        "options": {}
+      },
+      "id": "825cc0a2-0812-43fc-ac30-43ec73742fc0",
+      "name": "Calling Qdrant Recommendation API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2160,
+        780
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://edcc6735-2ffb-484f-b735-3467043828fe.europe-west3-0.gcp.cloud.qdrant.io:6333/collections/imdb_1000_open_ai/points",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "qdrantApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"ids\": [\"{{ $json.result.points[0].id }}\", \"{{ $json.result.points[1].id }}\", \"{{ $json.result.points[2].id }}\"],\n    \"with_payload\":true\n}",
+        "options": {}
+      },
+      "id": "0cb741bb-14bf-46b5-af86-9aea8839aae0",
+      "name": "Retrieving Recommended Movies Meta Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2380,
+        740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b4b520a5-d0e2-4dcb-af9d-0b7748fd44d6",
+              "name": "movie_recommendation_score",
+              "type": "number",
+              "value": "={{ $json.score }}"
+            },
+            {
+              "id": "c9f0982e-bd4e-484b-9eab-7e69e333f706",
+              "name": "movie_description",
+              "type": "string",
+              "value": "={{ $json.payload.content }}"
+            },
+            {
+              "id": "7c7baf11-89cd-4695-9f37-13eca7e01163",
+              "name": "movie_name",
+              "type": "string",
+              "value": "={{ $json.payload.metadata.movie_name }}"
+            },
+            {
+              "id": "1d1d269e-43c7-47b0-859b-268adf2dbc21",
+              "name": "movie_release_year",
+              "type": "string",
+              "value": "={{ $json.payload.metadata.release_year }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8766efe4-bd3b-4f8c-a197-eaa42aa9eb5f",
+      "name": "Selecting Fields Relevant for Agent",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        3060,
+        680
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "Tool, calling Qdrant's recommendation API based on user's request, transformed by AI agent"
+      },
+      "id": "c5b5be28-3aca-45b6-a974-ee294386f0e9",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        880,
+        1060
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Uploading data (movies and their descriptions) to Qdrant Vector Store\n"
+      },
+      "id": "d0c247ce-0ece-4a13-8965-76952993c0c5",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "query": {
+            "negative_example": "horror bloody movie",
+            "positive_example": "romantic comedy"
+          }
+        }
+      }
+    ]
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 2,
+  "updatedAt": "2025-04-09T07:16:19.982Z",
+  "versionId": "ddbf1ea3-f96c-48c2-b447-7acada20aaeb"
+}
