@@ -1,0 +1,303 @@
+{
+  "active": false,
+  "connections": {
+    "Fetch Stock Market News": {
+      "main": [
+        [
+          {
+            "node": "AI Transformation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Sentiment Analysis": {
+      "main": [
+        [
+          {
+            "node": "Calculate Sentiment Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Sentiment Score": {
+      "main": [
+        [
+          {
+            "node": "Calculate Risk & Confidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Risk & Confidence": {
+      "main": [
+        [
+          {
+            "node": "Check Risk Threshold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Risk Threshold": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Fetch Historical Stock Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Live Stock Price",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Stock Market News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Historical Stock Data": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Calculate Risk & Confidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Transformation": {
+      "main": [
+        [
+          {
+            "node": "AI Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-17T01:10:35.038Z",
+  "id": "ywKAPVcBvvEyLrgO",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Algo Trading",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Trigger - 2 AM",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        200,
+        40
+      ],
+      "id": "324220c4-9225-46c4-bb73-691b6c9b4c57",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/TCS.BO",
+        "options": {}
+      },
+      "name": "Fetch Live Stock Price",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        180,
+        500
+      ],
+      "id": "48f8d31e-1677-46d3-94c7-5f82dfe2dee0"
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/TCS.BO?interval=1d&range=1y",
+        "options": {}
+      },
+      "name": "Fetch Historical Stock Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        600
+      ],
+      "id": "67feaf37-3c55-4d83-9c33-bca9336fc19b"
+    },
+    {
+      "parameters": {
+        "url": "=https://newsdata.io/api/1/news?apikey=pub_7413250fc0d89f684afa3f94fe49f69589919&q=TCS,INFY,RELIANCE&category=business&language=en\n",
+        "options": {}
+      },
+      "name": "Fetch Stock Market News",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        400
+      ],
+      "id": "565efa82-cbc0-4edb-abb7-bf820b970c29"
+    },
+    {
+      "parameters": {
+        "model": "chatgpt-4o-latest",
+        "prompt": "={{\n  JSON.stringify([\n    [\n      {\n        \"role\": \"system\",\n        \"content\": \"You are a financial analyst. Analyze the sentiment of the following stock news and return only 'positive', 'negative', or 'neutral'.\"\n      },\n      {\n        \"role\": \"user\",\n        \"content\": $json.sanitizedNews ? $json.sanitizedNews : \"Stock market shows mixed trends today.\"\n      }\n    ]\n  ])\n}}\n",
+        "options": {
+          "temperature": "={{ 0.2 }}"
+        },
+        "requestOptions": {}
+      },
+      "name": "AI Sentiment Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        860,
+        400
+      ],
+      "id": "5b14d8d9-20c9-4519-b0cc-73c7dc96b94f",
+      "credentials": {
+        "openAiApi": {
+          "id": "jW2oEwP6UKhVM3b1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const sentimentScore = $json.sentiment === \"positive\" ? 50 : ($json.sentiment === \"negative\" ? -50 : 0);\nreturn { sentimentScore };"
+      },
+      "name": "Calculate Sentiment Score",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        400
+      ],
+      "id": "917c1e3b-4102-464d-8f5d-5f125a61a148"
+    },
+    {
+      "parameters": {
+        "functionCode": "const forecastScore = $json.forecast[6] > $json.forecast[0] ? 50 : -50;\nconst confidence = ($json.sentimentScore + forecastScore) / 2;\nconst riskFactor = forecastScore === 50 ? confidence * 1.2 : confidence * 0.8;\nreturn { confidence, riskFactor, trade: riskFactor > 65 ? \"YES\" : \"NO\" };\n"
+      },
+      "name": "Calculate Risk & Confidence",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        600
+      ],
+      "id": "5694d4c8-14ad-4c05-b680-aeb80585a62b"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"trade\"]}}",
+              "operation": "is",
+              "value2": "YES"
+            }
+          ]
+        }
+      },
+      "name": "Check Risk Threshold",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        600
+      ],
+      "id": "9f803478-c601-4bbb-8c05-021f18af878c"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        580,
+        140
+      ],
+      "id": "bfa57546-3cad-41ef-923f-83a26d891b3e",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import pandas as pd\nimport numpy as np\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom sklearn.preprocessing import MinMaxScaler\n\n# Extract stock prices from input JSON\nprices = $input.item.json.get(\"chart\", {}).get(\"result\", [{}])[0].get(\"indicators\", {}).get(\"quote\", [{}])[0].get(\"close\", [])\n\n# Validate price data\nif not prices or len(prices) < 10:\n    raise ValueError(\"Not enough historical stock data for forecasting.\")\n\ndata = np.array(prices).reshape(-1, 1)\n\n# Scale data for better performance\nscaler = MinMaxScaler()\ndata_scaled = scaler.fit_transform(data)\n\n# Prepare training dataset\nX, y = [], []\nfor i in range(5, len(data_scaled)):\n    X.append(data_scaled[i-5:i, 0])\n    y.append(data_scaled[i, 0])\n\nX, y = np.array(X), np.array(y)\nX = np.reshape(X, (X.shape[0], X.shape[1], 1))\n\n# Define LSTM model\nmodel = keras.Sequential([\n    keras.layers.LSTM(50, return_sequences=True, input_shape=(X.shape[1], 1)),\n    keras.layers.LSTM(50),\n    keras.layers.Dense(1)\n])\n\nmodel.compile(optimizer='adam', loss='mean_squared_error')\n\n# Train model\nmodel.fit(X, y, epochs=20, batch_size=8, verbose=0)\n\n# Forecast next 7 days\npredictions = []\ncurrent_input = data_scaled[-5:].reshape(1, 5, 1)\n\nfor _ in range(7):\n    next_pred = model.predict(current_input, verbose=0)\n    predictions.append(scaler.inverse_transform(next_pred)[0][0])\n    current_input = np.append(current_input[:, 1:, :], next_pred.reshape(1, 1, 1), axis=1)\n\nreturn {\"forecast\": predictions}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        600
+      ],
+      "id": "33a4f435-5618-4ed4-bad2-2e049be0db6d",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "codeGeneratedForPrompt": "const news = $json.news;\n\n// Ensure news exists and has content\nif (!news || !Array.isArray(news) || news.length === 0) {\n  return [{ sanitizedNews: \"No relevant news available for analysis.\" }];\n}\n\n// Try to extract the correct title field\nconst firstArticle = news[0];\nconst title = firstArticle.title || firstArticle.headline || \"No title available\";\n\nreturn [{ sanitizedNews: title }];\n",
+        "jsCode": "const news = $input.all().map((item) => item.json.news);\n\nif (!news || !Array.isArray(news) || news.length === 0) {\n  return [{ sanitizedNews: \"No relevant news available for analysis.\" }];\n}\n\nconst firstArticle = news[0];\nconst title =\n  firstArticle.title || firstArticle.headline || \"No title available\";\n\nreturn [{ sanitizedNews: title }];\n"
+      },
+      "type": "n8n-nodes-base.aiTransform",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        240
+      ],
+      "id": "50619cff-ddca-4cf0-9cd2-d11e4a2dda9f",
+      "name": "AI Transform",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "const articles = $json.results;\nif (!articles || !Array.isArray(articles) || articles.length === 0) {\n  return [{ sanitizedNews: \"Stock market shows mixed trends today.\" }];\n}\nconst newsTitle = articles.slice(0, 2)\n  .map(a => a.title.substring(0, 50))\n  .filter(t => t)\n  .join(\". \") || \"Stock market update.\";\nreturn [{ sanitizedNews: newsTitle }];\n"
+      },
+      "name": "AI Transformation",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        860,
+        180
+      ],
+      "id": "6f13f7dc-75d1-47b8-9314-b8a5494d7171"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-03-18T07:22:13.699Z",
+  "versionId": "690b82cf-a84f-49e9-b9f7-9a51064dc873"
+}
