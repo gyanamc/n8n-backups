@@ -1,0 +1,668 @@
+{
+  "active": false,
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-17T06:34:51.603Z",
+  "id": "wsAEEIdStc81vUoh",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Product recommendation through telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        60,
+        20
+      ],
+      "id": "8cab26b9-31fe-430c-beac-1bd5dff73ce6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        280,
+        240
+      ],
+      "id": "b173bf66-ead1-4b7b-a3cc-8a28ccac8ec9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "jW2oEwP6UKhVM3b1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        240
+      ],
+      "id": "98b2ddee-ca57-493d-a397-8b0eb0a8589f",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I",
+          "mode": "list",
+          "cachedResultName": "Youtube_Setup_Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        120,
+        240
+      ],
+      "id": "b3cc48cc-8974-4c3a-9cef-b228f0daab55",
+      "name": "Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0c5f75b1-2f01-4807-ab32-a6d317ed149c",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Train:",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notStartsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Train:",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    },
+                    "id": "928ecf9f-069f-47bc-80be-5b1df2169be0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -220,
+        -60
+      ],
+      "id": "60514950-1701-4784-a352-f18897c0230b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = $input.first().json.messages[0].text.body;\nconst urlMatch = message.match(/(?:https?:\\/\\/)?([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}(?:\\/\\S*)?)/);\nif (urlMatch) {\n    let url = urlMatch[0];\n    if (!url.startsWith(\"http\")) {\n        url = \"https://\" + url; // Add https:// if missing\n    }\n    return [{ product_url: url }];\n} else {\n    return [{ product_url: \"Invalid URL\" }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        200
+      ],
+      "id": "f2b1b5fd-3f1c-4c9e-a4b0-177d3d5cb3fd",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.product_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -380,
+        200
+      ],
+      "id": "e1981e00-1abf-4cfa-bea1-50cda5194f85",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Retrieve the HTML content from the previous node\nconst htmlContent = $input.first().json.data; // Ensure 'data' contains the HTML response\n\n// Check if htmlContent exists and is a string\nif (typeof htmlContent !== 'string') {\n    throw new Error('Expected HTML content, but received non-string data.');\n}\n\n// Clean up the content:\n\n// Remove all <a> tags (links) and their content\nlet cleanedText = htmlContent.replace(/<a[^>]*>.*?<\\/a>/g, '');\n\n// Remove all script, style, and other non-text elements\ncleanedText = cleanedText.replace(/<script[^>]*>.*?<\\/script>/gs, '');\ncleanedText = cleanedText.replace(/<style[^>]*>.*?<\\/style>/gs, '');\n\n// Add line breaks for common HTML block elements (headings, paragraphs, etc.):\ncleanedText = cleanedText.replace(/<h[1-6][^>]*>/g, '\\n'); // For headings (h1, h2, etc.)\ncleanedText = cleanedText.replace(/<\\/h[1-6]>/g, '\\n'); // Closing heading tags\ncleanedText = cleanedText.replace(/<p[^>]*>/g, '\\n'); // For paragraphs <p>\ncleanedText = cleanedText.replace(/<\\/p>/g, '\\n'); // Closing paragraph tags\ncleanedText = cleanedText.replace(/<ul[^>]*>/g, '\\n'); // For unordered lists <ul>\ncleanedText = cleanedText.replace(/<\\/ul>/g, '\\n'); // Closing unordered list tags\ncleanedText = cleanedText.replace(/<ol[^>]*>/g, '\\n'); // For ordered lists <ol>\ncleanedText = cleanedText.replace(/<\\/ol>/g, '\\n'); // Closing ordered list tags\ncleanedText = cleanedText.replace(/<li[^>]*>/g, '\\n'); // List items <li>\ncleanedText = cleanedText.replace(/<\\/li>/g, '\\n'); // Closing list item tags\n\n// Remove all remaining HTML tags\ncleanedText = cleanedText.replace(/<[^>]+>/g, '');\n\n// Remove special characters (you can customize this regex for more specific character removal)\ncleanedText = cleanedText.replace(/[^\\w\\s]/g, ' '); // Remove special characters except for word characters and spaces\n\n// Normalize whitespace (convert multiple spaces into a single space)\ncleanedText = cleanedText.replace(/\\s+/g, ' ').trim();\n\n// Output the cleaned and formatted text with line breaks\nreturn [\n    {\n        json: {\n            cleanedText: cleanedText // This will show plain text with line breaks\n        }\n    }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        200
+      ],
+      "id": "b8ff50f8-8500-4416-bca9-026c23282714",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I",
+          "mode": "list",
+          "cachedResultName": "Youtube_Setup_Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Link": "={{ $('Code').item.json.product_url }}",
+            "Product Discription": "={{ $json.cleanedText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Product Link",
+              "displayName": "Product Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Product Price",
+              "displayName": "Product Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Product Discription",
+              "displayName": "Product Discription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Topic",
+              "displayName": "Product Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -560,
+        440
+      ],
+      "id": "e7c134ad-b2e1-49e8-9ef9-c31ad87aeb14",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Prompt User Message:\n\nThis is the url of the product: {{ $json['Product Link'] }}\n\nProduct Description:\n{{ $json['Product Discription'] }}\n",
+        "options": {
+          "systemMessage": "=Systems Instructions - AI Agent - Product Training:\n\nYou are a helpful assistant.\n\nYou have received the text of a product page. Your job is to extract the product name and the product price.\n\nYou have access to the Google Sheets tool that allows you to update columns and cells inside a Google Sheet.\n\nYour task is to always add the price and product name and product topic inside the Google Sheet to the exact same row with the URL of the product you received.\n\nWhen you add the product price, make sure to clearly identify from the product description if it's a subscription or one-time payment.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -240,
+        460
+      ],
+      "id": "24d5f434-c11a-4612-a673-1ecb2446086a",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        660
+      ],
+      "id": "fff561e3-603c-4db0-8a46-82c45ebbab7c",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "jW2oEwP6UKhVM3b1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        660
+      ],
+      "id": "791dba86-353d-4b93-93ba-93b2c4047008",
+      "name": "Window Buffer Memory1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I",
+          "mode": "list",
+          "cachedResultName": "Youtube_Setup_Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UB-eDwCZSx8CdD-lEatlkX-hzN1guFzYEydlTb8q77I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Link": "={{ $fromAI(\"Product_Link\",\"this is the website link of the product\") }}",
+            "Product Name": "={{ $fromAI(\"Product_Name\",\"this is the name of the product\") }}",
+            "Product Price": "={{ $fromAI(\"Product_Price\",\"this is the price of the product\") }}",
+            "Product Discription": "=",
+            "Product Topic": "={{ $fromAI(\"product_topic\",\"this is the topic of the product that specifies what it is for, who it is for and what the key benefits are\") }}"
+          },
+          "matchingColumns": [
+            "Product Link"
+          ],
+          "schema": [
+            {
+              "id": "Product Link",
+              "displayName": "Product Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Price",
+              "displayName": "Product Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Discription",
+              "displayName": "Product Discription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Topic",
+              "displayName": "Product Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        20,
+        680
+      ],
+      "id": "4f1d6bc7-6c2a-4d2e-8b5d-cf949b9a87cc",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pzPzWvXsOG0zi3Wr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -820,
+        -60
+      ],
+      "id": "e7751754-13f8-462f-9d77-5f71b3ef12dc",
+      "name": "Telegram Trigger",
+      "webhookId": "bf29c44f-3929-4678-b4ee-cc3ba87d0c76",
+      "credentials": {
+        "telegramApi": {
+          "id": "d9g3jsuNMGVz8eAb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "={{ $json.message.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        440
+      ],
+      "id": "cfce7dab-7fe2-42da-b644-bc657f68239d",
+      "name": "Telegram",
+      "webhookId": "bf8aede4-9b5c-4c76-afbc-a5bf64c311f0",
+      "credentials": {
+        "telegramApi": {
+          "id": "d9g3jsuNMGVz8eAb",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-03-18T07:36:27.710Z",
+  "versionId": "704c0de1-47e9-4c5b-bf8a-3de61403c096"
+}
