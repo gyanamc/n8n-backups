@@ -1,0 +1,389 @@
+{
+  "active": false,
+  "connections": {
+    "Google Speech-to-Text1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI NLP Processing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI NLP Processing1": {
+      "main": [
+        [
+          {
+            "node": "SBICard Website Search1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SBICard Website Search1": {
+      "main": [
+        [
+          {
+            "node": "Generate Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Response1": {
+      "main": [
+        [
+          {
+            "node": "Convert to Speech (TTS)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Google Speech-to-Text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Speech (TTS)1": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Script (GPT-4)": {
+      "main": [
+        [
+          {
+            "node": "Generate Voiceover (TTS)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Voiceover (TTS)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Stock Video (Pexels)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Stock Video (Pexels)": {
+      "main": [
+        [
+          {
+            "node": "Merge Video & Audio (FFmpeg)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Video & Audio (FFmpeg)": {
+      "main": [
+        [
+          {
+            "node": "Upload to YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Generate Script (GPT-4)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-04-01T06:49:01.454Z",
+  "id": "AOjvUX8TzHeRiknV",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "STT",
+  "nodes": [
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://speech.googleapis.com/v1/speech:recognize?key= bf5befcafcd55ad185872f3dd0c4ab1c82d32de4",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Google Speech-to-Text1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        140,
+        0
+      ],
+      "id": "d2ba40ba-fee3-48e6-8203-7b2dce55123e",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "prompt": "Extract the key intent from this user query: {{$json[\"results\"][0][\"alternatives\"][0][\"transcript\"]}}. Keep it concise.",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "OpenAI NLP Processing1",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        340,
+        0
+      ],
+      "id": "4c610236-638c-4b70-bee7-a4c8e640699d",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://sbicard.com/search?q={{$json[\"choices\"][0][\"text\"]}}",
+        "options": {}
+      },
+      "name": "SBICard Website Search1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        540,
+        0
+      ],
+      "id": "d9aa14c1-cc47-43b3-96e3-84ee9d1d3ff7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "prompt": "Summarize this SBI Card search result into a customer-friendly response: {{$json[\"body\"]}}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Generate Response1",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        740,
+        0
+      ],
+      "id": "045d0a5a-98ae-429f-8ec4-0856a91d4985",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "url": "https://texttospeech.googleapis.com/v1/text:synthesize?key=YOUR_GOOGLE_API_KEY",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Convert to Speech (TTS)1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        940,
+        0
+      ],
+      "id": "8f4019fe-f514-40cd-abc1-86be17c68c77",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -140,
+        0
+      ],
+      "id": "abd5f985-05d2-4482-9feb-ac628b0118c9",
+      "name": "Telegram Trigger1",
+      "webhookId": "653059d5-e86e-402a-9155-48e7248349b4",
+      "credentials": {
+        "telegramApi": {
+          "id": "d9g3jsuNMGVz8eAb",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $json.message.chat.id }}",
+        "file": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1220,
+        20
+      ],
+      "id": "8c066981-cbed-446b-9b57-228d5403d85c",
+      "name": "Telegram",
+      "webhookId": "85c6b526-3fc7-4a65-bae3-d9177e8660c1",
+      "credentials": {
+        "telegramApi": {
+          "id": "d9g3jsuNMGVz8eAb",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        720
+      ],
+      "id": "fe785e4f-eb67-4e1a-bebc-ac58180e63f5"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Generate Script (GPT-4)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        460,
+        720
+      ],
+      "id": "74dea6f7-0d24-44f0-a6c6-c38d7a6eaf10"
+    },
+    {
+      "parameters": {
+        "url": "https://api.elevenlabs.io/v1/text-to-speech",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Generate Voiceover (TTS)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        720
+      ],
+      "id": "53283429-61f1-46f7-bfac-e845e7e36a85"
+    },
+    {
+      "parameters": {
+        "url": "https://api.pexels.com/v1/search?query=technology",
+        "options": {}
+      },
+      "name": "Fetch Stock Video (Pexels)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        960,
+        720
+      ],
+      "id": "51d11bc5-4719-4c57-8c28-b25385a1877f"
+    },
+    {
+      "parameters": {
+        "command": "ffmpeg -i {{$json[\"videos\"][0][\"video_files\"][0][\"link\"]}} -i voiceover.mp3 -filter_complex \"[0:a][1:a]amix=inputs=2:duration=first[a]\" -map 0:v -map \"[a]\" -c:v copy -shortest output.mp4"
+      },
+      "name": "Merge Video & Audio (FFmpeg)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        720
+      ],
+      "id": "589c51bc-fd95-4560-89da-7bd3273f7e67"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/upload/youtube/v3/videos",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Upload to YouTube",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        720
+      ],
+      "id": "56c211e0-4f7a-491c-b27e-dcbc7087c87c"
+    }
+  ],
+  "pinData": {
+    "Telegram": [
+      {
+        "json": {
+          "ok": true,
+          "result": {
+            "message_id": 501,
+            "from": {
+              "id": 7945835040,
+              "is_bot": true,
+              "first_name": "gyanam",
+              "username": "gyanam_bot"
+            },
+            "chat": {
+              "id": 1636597254,
+              "first_name": "Kumar",
+              "last_name": "Gyanam",
+              "username": "KumarGyanam",
+              "type": "private"
+            },
+            "date": 1743490359,
+            "voice": {
+              "duration": 2,
+              "mime_type": "audio/ogg",
+              "file_id": "AwACAgUAAxkBAAIB9GfrjOoJtKO3JtPbf44Xf0Phh9ILAAJtFAACqIBgV8GgIBbOXsqqNgQ",
+              "file_unique_id": "AgADbRQAAqiAYFc",
+              "file_size": 11200
+            }
+          }
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-04-01T11:53:16.862Z",
+  "versionId": "695128f4-7527-46c5-befb-a9d8f3c69142"
+}
