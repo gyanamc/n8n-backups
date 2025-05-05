@@ -364,7 +364,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer key_abbef5babf3afdb082d5f799b4b2276e2e010afab7b7f83343036a38c51e9214e8adfe3975c67c032b9d92033670586b091d48bbdadd4ed1e4cdcc8e1fa307d3"
+              "value": "=Bearer "
             },
             {
               "name": "X-Runway-Version",
@@ -431,6 +431,6 @@
     }
   ],
   "triggerCount": 0,
-  "updatedAt": "2025-04-18T09:05:36.305Z",
-  "versionId": "bb5039a0-48da-4e68-baa0-9954d3b5f2b3"
+  "updatedAt": "2025-05-05T09:15:02.231Z",
+  "versionId": "69a157c5-29eb-4e7a-accb-98d895e63e87"
 }
