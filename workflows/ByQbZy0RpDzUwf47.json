@@ -1,0 +1,261 @@
+{
+  "active": false,
+  "connections": {
+    "Fetch Incidents": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Fetch Incidents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook Listener1": {
+      "main": [
+        [
+          {
+            "node": "Close Incident1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Related Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Close Incident",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-17T16:24:25.521Z",
+  "id": "ByQbZy0RpDzUwf47",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "ServiceNow Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "incident",
+        "operation": "getAll",
+        "options": {}
+      },
+      "name": "Fetch Incidents",
+      "type": "n8n-nodes-base.serviceNow",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -180
+      ],
+      "id": "f844c9fb-eed4-48e8-8bf9-9ffcd21c3dd0",
+      "credentials": {
+        "serviceNowOAuth2Api": {
+          "id": "QrMBfipoKUahexBx",
+          "name": "ServiceNow OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1636597254",
+        "text": "=🚨 New Incident Alert 🚨 Incident: {{$json[\"number\"]}} Description: {{$json[\"short_description\"]}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": " ✅ Close Incident",
+                    "additionalFields": {
+                      "callback_data": "=close_{{$json[\"sys_id\"]}}"
+                    }
+                  },
+                  {
+                    "text": "📌 View Details",
+                    "additionalFields": {
+                      "callback_data": "=details_{{$json[\"sys_id\"]}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -180
+      ],
+      "id": "3e31dcfd-8a06-409a-b26e-1bd5291d5c85",
+      "webhookId": "6810ca94-f7ff-41f8-bc77-f6585eae18cf",
+      "credentials": {
+        "telegramApi": {
+          "id": "d9g3jsuNMGVz8eAb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -180
+      ],
+      "id": "02b5ba69-cb1e-47ca-89e9-6bd275cc4d24",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram-response",
+        "options": {}
+      },
+      "name": "Webhook Listener1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        60
+      ],
+      "id": "4ca4c610-b316-4666-bb90-8d1442abc34f",
+      "webhookId": "dc3a5089-c08f-443f-af5e-06bbf18e5a6c"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "resource": "incident",
+        "id": "={{ $json.body.callback_query.message.text.match(/Incident: (INC\\d+)/)[1] }}\n",
+        "options": {}
+      },
+      "name": "Close Incident1",
+      "type": "n8n-nodes-base.serviceNow",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        220
+      ],
+      "id": "35ef0084-d1a5-4109-8d48-3d8283cdbb44",
+      "credentials": {
+        "serviceNowBasicApi": {
+          "id": "sA28IQjLmNzwDV50",
+          "name": "ServiceNow Basic Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "resource": "record"
+      },
+      "name": "Fetch Related Items1",
+      "type": "n8n-nodes-base.serviceNow",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "id": "3cb5f4c4-b55d-4936-adc5-c4658c55c3d4",
+      "credentials": {
+        "serviceNowBasicApi": {
+          "id": "sA28IQjLmNzwDV50",
+          "name": "ServiceNow Basic Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -360
+      ],
+      "id": "26d6b1e9-9528-46b3-a30f-dd475735fb6e",
+      "webhookId": "a3f24152-97cd-411f-b7a9-a6e06cb5abf6",
+      "credentials": {
+        "telegramApi": {
+          "id": "d9g3jsuNMGVz8eAb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "incident",
+        "operation": "update",
+        "id": "={{ $json.callback_query.data.split('_')[1] }}",
+        "updateFields": {
+          "assigned_to": "c97024fe53271300e321ddeeff7b1233",
+          "business_service": "0e7a06157f10310016181ccebefa91ce",
+          "close_notes": "Please provide your comments.",
+          "close_code": "Resolved by change"
+        }
+      },
+      "name": "Close Incident",
+      "type": "n8n-nodes-base.serviceNow",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -360
+      ],
+      "id": "ad9d092d-16bb-44d6-9bce-e698579b12f9",
+      "credentials": {
+        "serviceNowOAuth2Api": {
+          "id": "QrMBfipoKUahexBx",
+          "name": "ServiceNow OAuth2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-03-31T06:13:28.033Z",
+  "versionId": "9db10157-7306-4f98-93e3-d47eccb19b57"
+}
